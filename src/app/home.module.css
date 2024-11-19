@@ -1,0 +1,38 @@
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Dois cards por linha */
+  gap: 20px; /* Espaçamento entre os cards */
+  justify-content: center; /* Centraliza os cards horizontalmente */
+  align-items: center; /* Centraliza os cards verticalmente */
+  height: calc(100vh - 100px); /* Ajusta a altura para considerar o header */
+  padding: 20px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff; /* Cor branca */
+  border: 1px solid #e0e0e0; /* Borda sutil */
+  border-radius: 8px; /* Bordas arredondadas */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  padding: 20px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-5px); /* Eleva o card ao passar o mouse */
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* Sombra mais intensa */
+}
+
+.card h2 {
+  margin: 0;
+  color: #1e3a5f; /* Azul escuro */
+}
