@@ -1,20 +1,26 @@
-'use client'
-import { useState, useEffect } from 'react';
-import LayoutDashboard from '../components/LayoutDashboard';
-import styles from '../styles/home.module.css'; // Importando o CSS Module
-import { FaMicrophone, FaDesktop, FaBook, FaChalkboardTeacher } from 'react-icons/fa'; // Importando ícones do Font Awesome
-import Modal from 'react-modal';
-import { useSpring, animated } from '@react-spring/web';
-import axios from 'axios';
+"use client";
+import { useState, useEffect } from "react";
+import LayoutDashboard from "../components/LayoutDashboard";
+import styles from "../styles/home.module.css";
+import {
+  FaMicrophone,
+  FaDesktop,
+  FaBook,
+  FaChalkboardTeacher,
+} from "react-icons/fa";
+import Modal from "react-modal";
+import { useSpring, animated } from "@react-spring/web";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 // Configurar o elemento raiz para o react-modal
-Modal.setAppElement('#__next');
+Modal.setAppElement("#__next");
 
 const iconMap = {
-  FaMicrophone: <FaMicrophone />,
-  FaDesktop: <FaDesktop />,
-  FaBook: <FaBook />,
-  FaChalkboardTeacher: <FaChalkboardTeacher />
+  microphone: <FaMicrophone />,
+  desktop: <FaDesktop />,
+  book: <FaBook />,
+  teacher: <FaChalkboardTeacher />,
 };
 
 const HomePage = () => {
@@ -22,22 +28,28 @@ const HomePage = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedEnvironment, setSelectedEnvironment] = useState(null);
   const [expandedItem, setExpandedItem] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
-    axios.get('http://localhost:8000/environments')
-      .then(response => {
-        setEnvironments(response.data);
-      })
-      .catch(error => {
-        console.error('Erro ao buscar dados:', error);
-      });
-  }, []);
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login"); // Redireciona para o login se não estiver autenticado
+    } else {
+      axios
+        .get("http://localhost:8000/environments")
+        .then((response) => {
+          setEnvironments(response.data);
+        })
+        .catch((error) => {
+          console.error("Erro ao buscar dados:", error);
+        });
+    }
+  }, [router]);
 
   const openModal = (environment) => {
     setSelectedEnvironment(environment);
     setModalIsOpen(true);
   };
-  
 
   const closeModal = () => {
     setModalIsOpen(false);
@@ -48,19 +60,30 @@ const HomePage = () => {
   const toggleDetails = (item) => {
     setExpandedItem(expandedItem === item ? null : item);
   };
-  
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove o token do localStorage
+    router.push("/login"); // Redireciona para a página de login
+    window.location.reload(); // Força o recarregamento para garantir que a navegação aconteça
+  };
 
   return (
     <LayoutDashboard>
-      <h1 className={styles.title}>Agendamento de reservas</h1> {/* Título centralizado */}
+      <h1 className={styles.title}>Agendamento de reservas</h1>
       <div className={styles.cardGrid}>
         {environments.map((environment, index) => (
-          <div key={index} className={styles.card} onClick={() => openModal(environment)}>
-            {iconMap[environment.icon]}
+          <div
+            key={index}
+            className={styles.card}
+            onClick={() => openModal(environment)}
+          >
+            {iconMap[environment.icon]}{" "}
+            {/* Certifique-se de que o valor de `environment.icon` corresponde à chave no `iconMap` */}
             <h2>{environment.name}</h2>
           </div>
         ))}
       </div>
+
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
@@ -75,35 +98,52 @@ const HomePage = () => {
               <div className={styles.itemHeader}>
                 <span>{item.name}</span>
                 <div>
-                  <button onClick={() => toggleDetails(item)} className={styles.detailsButton}>
-                    {expandedItem === item ? 'Esconder Detalhes' : 'Ver Detalhes'}
+                  <button
+                    onClick={() => toggleDetails(item)}
+                    className={styles.detailsButton}
+                  >
+                    {expandedItem === item
+                      ? "Esconder Detalhes"
+                      : "Ver Detalhes"}
                   </button>
                   <button className={styles.reserveButton}>Reservar</button>
                 </div>
               </div>
-              {expandedItem === item && (
-                <ItemDetails item={item} />
-              )}
+              {expandedItem === item && <ItemDetails item={item} />}
             </li>
           ))}
         </ul>
-        <button onClick={closeModal} className={styles.closeButton}>Fechar</button>
+        <button onClick={closeModal} className={styles.closeButton}>
+          Fechar
+        </button>
       </Modal>
     </LayoutDashboard>
   );
 };
 
 const ItemDetails = ({ item }) => {
-  const style = useSpring({ height: 'auto', from: { height: 0 } });
+  const style = useSpring({ height: "auto", from: { height: 0 } });
 
   return (
     <animated.div style={style} className={styles.itemDetails}>
-      <p><strong>Tipo:</strong> {item.tipo}</p>
-      <p><strong>Status:</strong> {item.status}</p>
-      <p><strong>Equipamentos:</strong> {item.equipamentos}</p>
-      <p><strong>Horário de Funcionamento:</strong> {item.horario_funcionamento}</p>
-      <p><strong>Localização:</strong> {item.localizacao}</p>
-      <p><strong>Descrição:</strong> {item.descricao}</p>
+      <p>
+        <strong>Tipo:</strong> {item.tipo}
+      </p>
+      <p>
+        <strong>Status:</strong> {item.status}
+      </p>
+      <p>
+        <strong>Equipamentos:</strong> {item.equipamentos}
+      </p>
+      <p>
+        <strong>Horário de Funcionamento:</strong> {item.horario_funcionamento}
+      </p>
+      <p>
+        <strong>Localização:</strong> {item.localizacao}
+      </p>
+      <p>
+        <strong>Descrição:</strong> {item.descricao}
+      </p>
     </animated.div>
   );
 };

@@ -1,102 +1,117 @@
 {
-    "environments": [
-      {
-        "name": "Auditório",
-        "icon": "FaMicrophone",
-        "items": [
-          {
-            "name": "Auditório 1",
-            "tipo": "Auditório",
-            "status": "disponível",
-            "equipamentos": "Projetor, Microfone",
-            "horario_funcionamento": "08:00 - 18:00",
-            "localizacao": "Prédio A",
-            "descricao": "Auditório principal com capacidade para 200 pessoas."
-          },
-          {
-            "name": "Auditório 2",
-            "tipo": "Auditório",
-            "status": "manutenção",
-            "equipamentos": "Projetor",
-            "horario_funcionamento": "08:00 - 18:00",
-            "localizacao": "Prédio B",
-            "descricao": "Auditório secundário com capacidade para 100 pessoas."
-          }
-        ]
-      },
-      {
-        "name": "AlphaLAB",
-        "icon": "FaDesktop",
-        "items": [
-          {
-            "name": "Lab 01",
-            "tipo": "Lab",
-            "status": "disponível",
-            "equipamentos": "20 Computadores",
-            "horario_funcionamento": "08:00 - 22:00",
-            "localizacao": "Prédio C",
-            "descricao": "Laboratório de informática com 20 computadores."
-          },
-          {
-            "name": "Lab 02",
-            "tipo": "Lab",
-            "status": "indisponível",
-            "equipamentos": "15 Computadores",
-            "horario_funcionamento": "08:00 - 22:00",
-            "localizacao": "Prédio D",
-            "descricao": "Laboratório de informática com 15 computadores."
-          }
-        ]
-      },
-      {
-        "name": "Biblioteca",
-        "icon": "FaBook",
-        "items": [
-          {
-            "name": "Biblioteca 1",
-            "tipo": "Biblioteca",
-            "status": "disponível",
-            "equipamentos": "Livros, Computadores",
-            "horario_funcionamento": "08:00 - 20:00",
-            "localizacao": "Prédio E",
-            "descricao": "Biblioteca principal com vasta coleção de livros."
-          },
-          {
-            "name": "Biblioteca 2",
-            "tipo": "Biblioteca",
-            "status": "disponível",
-            "equipamentos": "Livros",
-            "horario_funcionamento": "08:00 - 20:00",
-            "localizacao": "Prédio F",
-            "descricao": "Biblioteca secundária com foco em literatura."
-          }
-        ]
-      },
-      {
-        "name": "Salas",
-        "icon": "FaChalkboardTeacher",
-        "items": [
-          {
-            "name": "Sala 1",
-            "tipo": "Sala",
-            "status": "disponível",
-            "equipamentos": "Quadro, Projetor",
-            "horario_funcionamento": "08:00 - 18:00",
-            "localizacao": "Prédio G",
-            "descricao": "Sala de aula com capacidade para 30 alunos."
-          },
-          {
-            "name": "Sala 2",
-            "tipo": "Sala",
-            "status": "indisponível",
-            "equipamentos": "Quadro",
-            "horario_funcionamento": "08:00 - 18:00",
-            "localizacao": "Prédio H",
-            "descricao": "Sala de aula com capacidade para 25 alunos."
-          }
-        ]
-      }
-    ]
-  }
-  
-  
+  "users": [
+    {
+      "id": 1,
+      "usuario": "admin",
+      "senha": "123456",
+      "email": "admin@gmail.com",
+      "funcao": "admin"
+    },
+    {
+      "id": 2,
+      "usuario": "user",
+      "senha": "123456",
+      "email": "user@gmail.com",
+      "funcao": "usuario"
+    }
+    
+  ],
+  "environments": [
+    {
+      "name": "Auditório",
+      "icon": "FaMicrophone",
+      "items": [
+        {
+          "name": "Auditório 1",
+          "tipo": "Auditório",
+          "status": "disponível",
+          "equipamentos": "Projetor, Microfone",
+          "horario_funcionamento": "08:00 - 18:00",
+          "localizacao": "Prédio A",
+          "descricao": "Auditório principal com capacidade para 200 pessoas."
+        },
+        {
+          "name": "Auditório 2",
+          "tipo": "Auditório",
+          "status": "manutenção",
+          "equipamentos": "Projetor",
+          "horario_funcionamento": "08:00 - 18:00",
+          "localizacao": "Prédio B",
+          "descricao": "Auditório secundário com capacidade para 100 pessoas."
+        }
+      ]
+    },
+    {
+      "name": "AlphaLAB",
+      "icon": "FaDesktop",
+      "items": [
+        {
+          "name": "Lab 01",
+          "tipo": "Lab",
+          "status": "disponível",
+          "equipamentos": "20 Computadores",
+          "horario_funcionamento": "08:00 - 22:00",
+          "localizacao": "Prédio C",
+          "descricao": "Laboratório de informática com 20 computadores."
+        },
+        {
+          "name": "Lab 02",
+          "tipo": "Lab",
+          "status": "indisponível",
+          "equipamentos": "15 Computadores",
+          "horario_funcionamento": "08:00 - 22:00",
+          "localizacao": "Prédio D",
+          "descricao": "Laboratório de informática com 15 computadores."
+        }
+      ]
+    },
+    {
+      "name": "Biblioteca",
+      "icon": "FaBook",
+      "items": [
+        {
+          "name": "Biblioteca 1",
+          "tipo": "Biblioteca",
+          "status": "disponível",
+          "equipamentos": "Livros, Computadores",
+          "horario_funcionamento": "08:00 - 20:00",
+          "localizacao": "Prédio E",
+          "descricao": "Biblioteca principal com vasta coleção de livros."
+        },
+        {
+          "name": "Biblioteca 2",
+          "tipo": "Biblioteca",
+          "status": "disponível",
+          "equipamentos": "Livros",
+          "horario_funcionamento": "08:00 - 20:00",
+          "localizacao": "Prédio F",
+          "descricao": "Biblioteca secundária com foco em literatura."
+        }
+      ]
+    },
+    {
+      "name": "Salas",
+      "icon": "FaChalkboardTeacher",
+      "items": [
+        {
+          "name": "Sala 1",
+          "tipo": "Sala",
+          "status": "disponível",
+          "equipamentos": "Quadro, Projetor",
+          "horario_funcionamento": "08:00 - 18:00",
+          "localizacao": "Prédio G",
+          "descricao": "Sala de aula com capacidade para 30 alunos."
+        },
+        {
+          "name": "Sala 2",
+          "tipo": "Sala",
+          "status": "indisponível",
+          "equipamentos": "Quadro",
+          "horario_funcionamento": "08:00 - 18:00",
+          "localizacao": "Prédio H",
+          "descricao": "Sala de aula com capacidade para 25 alunos."
+        }
+      ]
+    }
+  ]
+}
