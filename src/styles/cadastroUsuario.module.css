@@ -1,0 +1,173 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .addButton {
+    display: inline-block;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .addButton:hover {
+    background-color: #45a049;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: white;
+  }
+  
+  .table th,
+  .table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+  }
+  
+  .table th {
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  .table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .editButton,
+  .deleteButton {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+    margin: 0 5px;
+  }
+  
+  .editButton {
+    background-color: #2196f3;
+  }
+  
+  .editButton:hover {
+    background-color: #1e88e5;
+  }
+  
+  .deleteButton {
+    background-color: #f44336;
+  }
+  
+  .deleteButton:hover {
+    background-color: #e53935;
+  }
+  
+  .overlay {
+    background: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999; /* Garantir que esteja na frente */
+  }
+  
+  .modal {
+    background: white;
+    padding: 20px; /* Espaço interno do modal */
+    border-radius: 8px;
+    max-width: 600px; /* Largura máxima ajustada */
+    min-width: 500px; /* Largura mínima ajustada */
+    margin: auto;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000; /* Modal ainda mais à frente que o overlay */
+  }
+  
+  .modal input {
+    width: calc(100% - 20px); /* Ajustar largura com base no padding */
+    margin: 10px 0; /* Espaçamento vertical entre os campos */
+    padding: 8px; /* Espaço interno dos inputs */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box; /* Garantir que o padding não quebre o layout */
+  }
+  
+  
+  
+  .modalTitle {
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+  }
+  
+  .form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .form input,
+  .form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .buttonGroup {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .buttonGroup button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.3s ease;
+  }
+  
+  .buttonGroup button:first-child {
+    background-color: #4caf50;
+  }
+  
+  .buttonGroup button:first-child:hover {
+    background-color: #45a049;
+  }
+  
+  .buttonGroup button:last-child {
+    background-color: #f44336;
+  }
+  
+  .buttonGroup button:last-child:hover {
+    background-color: #e53935;
+  }
+  

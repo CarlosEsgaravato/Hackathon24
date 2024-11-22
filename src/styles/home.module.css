@@ -1,6 +1,7 @@
 /* styles/home.module.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
+/* Título da página */
 .title {
   text-align: center;
   font-size: 2.5rem; /* Tamanho grande */
@@ -9,6 +10,7 @@
   font-family: 'Poppins', sans-serif;
 }
 
+/* Grid de cards */
 .cardGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* Dois cards por linha */
@@ -18,6 +20,7 @@
   padding: 20px;
 }
 
+/* Estilos dos cards */
 .card {
   display: flex;
   flex-direction: column;
@@ -55,6 +58,7 @@
   margin-bottom: 10px; /* Espaçamento entre o ícone e o texto */
 }
 
+/* Estilo do modal */
 .modal {
   position: fixed;
   top: 50%;
@@ -63,7 +67,7 @@
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  z-index: 1000; /* Certifique-se de que o z-index seja alto para ficar acima de outros elementos */
+  z-index: 1000;
   width: 80%;
   max-width: 600px;
   text-align: center;
@@ -75,63 +79,80 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5); /* Semitransparente */
-  z-index: 999; /* Certifique-se de que o overlay tenha z-index maior que os cards, mas menor que o modal */
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
 }
 
-.itemList {
-  list-style-type: none;
+/* Lista de itens dentro do modal */
+.environmentList {
   padding: 0;
 }
 
-.item {
-  margin-bottom: 10px;
+.environmentItem {
+  display: flex;
+  justify-content: space-between; /* Alinha os itens nas extremidades */
+  align-items: center; /* Alinha verticalmente */
   padding: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 5px;
   background-color: #f9f9f9;
+  margin-bottom: 10px; /* Espaço entre os itens */
 }
 
-.itemHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* Nome do ambiente */
+.environmentItem p {
+  margin: 0;
+  flex-grow: 1; /* Faz o nome ocupar o restante do espaço */
 }
 
-.detailsButton {
-  background-color: #1e3a5f;
-  color: white;
-  border: none;
+/* Botões dentro do item */
+.detailsButton,
+.reserveButton {
   padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
   font-family: 'Poppins', sans-serif;
-  margin-right: 10px;
+  margin-left: 10px; /* Espaço entre os botões */
+}
+
+/* Estilo do botão de "Ver Detalhes" */
+.detailsButton {
+  background-color: #1e3a5f;
+  color: white;
+  border: none;
 }
 
 .detailsButton:hover {
   background-color: #163a5f;
 }
 
+/* Estilo do botão de "Reservar" */
 .reserveButton {
   background-color: #28a745;
   color: white;
   border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: 'Poppins', sans-serif;
 }
 
 .reserveButton:hover {
   background-color: #218838;
 }
 
-.itemDetails {
+/* Detalhes do item (quando expandido) */
+.environmentDetails {
   margin-top: 10px;
   text-align: left;
+  display: none; /* Escondido por padrão */
+  overflow: hidden;
+  transition: height 0.3s ease-out; /* Transição suave da altura */
+  height: 0; /* Começa com a altura 0 */
 }
 
+.environmentItem.expanded .environmentDetails {
+  display: block; /* Mostra detalhes ao expandir */
+  height: auto;
+}
+
+/* Botão de fechar o modal */
 .closeButton {
   margin-top: 20px;
   padding: 10px 20px;
@@ -173,9 +194,22 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
-  
+
   .logoutButton:hover {
     background-color: #c9302c;
   }
+
+  /* Ajustes para o layout mobile */
+  .environmentItem {
+    flex-direction: column; /* Empilha o nome e os botões verticalmente em telas menores */
+    align-items: flex-start; /* Alinha os itens à esquerda */
+    margin-bottom: 10px;
+  }
   
+  .detailsButton,
+  .reserveButton {
+    width: 100%; /* Botões ocupam toda a largura em dispositivos pequenos */
+    margin-left: 0;
+    margin-top: 10px; /* Espaço entre os botões */
+  }
 }

@@ -38,6 +38,7 @@ const LayoutDashboard = ({ children }: { children: React.ReactNode }) => {
       {/* Menu lateral */}
       <div className={`sidebar ${isMenuVisible ? 'visible' : ''}`}>
         <ul>
+          <li onClick={() => handleNavigate('/')}>Home</li>
           <li onClick={() => handleNavigate('/dashboard')}>Dashboard</li>
           <li onClick={() => handleNavigate('/cadastro-ambiente')}>Cadastro de Ambiente</li>
           <li onClick={() => handleNavigate('/cadastro-usuario')}>Cadastro de Usuário</li>
