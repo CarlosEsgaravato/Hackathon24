@@ -1,11 +1,15 @@
 /* cadastroAmbiente.module.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
 .container {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
+  margin-right: 20px; /* Adiciona margem à direita */
+  box-sizing: border-box; /* Garante que o padding e a margem sejam contados no tamanho total */
+}
   
   .h1Title {
     font-size: 24px;
@@ -164,4 +168,33 @@
   .timeInputs input {
     width: 48%;
   }
+
+  /* Estilo para a coluna de descrição */
+  .descriptionCell {
+    max-width: 150px; /* Ajuste a largura máxima conforme necessário */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    position: relative; /* Necessário para o ::after */
+  }
+  
+  /* Tooltip - Adicionar margem à direita */
+  .descriptionCell:hover::after {
+    content: attr(data-description);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 10px; /* Adiciona margem à direita para evitar que o tooltip toque no final da tela */
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: normal;
+    max-width: 250px;  /* Ajuste a largura do tooltip */
+    z-index: 10;
+    word-wrap: break-word;
+    overflow-wrap: break-word; /* Garante que o texto quebre a linha se necessário */
+  }
+
   

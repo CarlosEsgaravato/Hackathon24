@@ -10,7 +10,7 @@ import axios from "axios";
 Modal.setAppElement('#__next');
 
 const CadastroAmbiente = () => {
-  const [environments, setEnvironments] = useState([]);
+  const [ambientes, setAmbientes] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     nome: "",
@@ -22,22 +22,21 @@ const CadastroAmbiente = () => {
     localizacao: "",
     descricao: ""
   });
-  const [editingEnvironmentId, setEditingEnvironmentId] = useState(null);
+  const [editingAmbienteId, setEditingAmbienteId] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/environments")
+    axios.get("http://localhost:8000/ambientes")
       .then(response => {
         console.log("Ambientes carregados:", response.data);
-        setEnvironments(response.data);
+        setAmbientes(response.data);
       })
       .catch(error => console.error("Erro ao buscar ambientes:", error));
   }, []);
-  
 
-  const openModal = (environment = null) => {
-    if (environment) {
-      setFormData(environment);
-      setEditingEnvironmentId(environment.id);
+  const openModal = (ambiente = null) => {
+    if (ambiente) {
+      setFormData(ambiente);
+      setEditingAmbienteId(ambiente.id);
     } else {
       setFormData({
         nome: "",
@@ -49,7 +48,7 @@ const CadastroAmbiente = () => {
         localizacao: "",
         descricao: ""
       });
-      setEditingEnvironmentId(null);
+      setEditingAmbienteId(null);
     }
     setModalIsOpen(true);
   };
@@ -74,35 +73,32 @@ const CadastroAmbiente = () => {
   };
 
   const handleSave = () => {
-    if (editingEnvironmentId) {
-      // Atualizar ambiente existente
+    if (editingAmbienteId) {
       axios
-        .put(`http://localhost:8000/environments/${editingEnvironmentId}`, formData)
+        .put(`http://localhost:8000/ambientes/${editingAmbienteId}`, formData)
         .then(() => {
-          setEnvironments((prev) =>
-            prev.map((env) => (env.id === editingEnvironmentId ? formData : env))
+          setAmbientes((prev) =>
+            prev.map((ambiente) => (ambiente.id === editingAmbienteId ? formData : ambiente))
           );
           closeModal();
         })
         .catch((error) => console.error("Erro ao atualizar ambiente:", error));
     } else {
-      // Criar novo ambiente, sem necessidade de id manual
       axios
-        .post("http://localhost:8000/environments", formData) // O ID será gerado automaticamente pelo JSON Server
+        .post("http://localhost:8000/ambientes", formData)
         .then((response) => {
-          setEnvironments((prev) => [...prev, response.data]);
+          setAmbientes((prev) => [...prev, response.data]);
           closeModal();
         })
         .catch((error) => console.error("Erro ao criar ambiente:", error));
     }
   };
-  
 
   const handleDelete = (id) => {
     axios
-      .delete(`http://localhost:8000/environments/${id}`)
+      .delete(`http://localhost:8000/ambientes/${id}`)
       .then(() => {
-        setEnvironments((prev) => prev.filter((env) => env.id !== id));
+        setAmbientes((prev) => prev.filter((ambiente) => ambiente.id !== id));
       })
       .catch((error) => console.error("Erro ao excluir ambiente:", error));
   };
@@ -129,25 +125,27 @@ const CadastroAmbiente = () => {
             </tr>
           </thead>
           <tbody>
-            {environments.map((env) => (
-              <tr key={env.id}>
-                <td>{env.id}</td>
-                <td>{env.nome}</td>
-                <td>{env.tipo}</td>
-                <td>{env.status}</td>
-                <td>{env.equipamentos}</td>
-                <td>{`${env.horario_inicio} - ${env.horario_fim}`}</td>
-                <td>{env.localizacao}</td>
-                <td>{env.descricao}</td>
+            {ambientes.map((ambiente) => (
+              <tr key={ambiente.id}>
+                <td>{ambiente.id}</td>
+                <td>{ambiente.nome}</td>
+                <td>{ambiente.tipo}</td>
+                <td>{ambiente.status}</td>
+                <td>{ambiente.equipamentos}</td>
+                <td>{`${ambiente.horario_inicio} - ${ambiente.horario_fim}`}</td>
+                <td>{ambiente.localizacao}</td>
+                <td className={styles.descriptionCell} data-description={ambiente.descricao}>
+                  {ambiente.descricao}
+                </td>
                 <td>
                   <button
-                    onClick={() => openModal(env)}
+                    onClick={() => openModal(ambiente)}
                     className={styles.editButton}
                   >
                     Editar
                   </button>
                   <button
-                    onClick={() => handleDelete(env.id)}
+                    onClick={() => handleDelete(ambiente.id)}
                     className={styles.deleteButton}
                   >
                     Excluir
@@ -165,7 +163,7 @@ const CadastroAmbiente = () => {
         className={styles.modal}
         overlayClassName={styles.overlay}
       >
-        <h2>{editingEnvironmentId ? "Editar Ambiente" : "Novo Ambiente"}</h2>
+        <h2>{editingAmbienteId ? "Editar Ambiente" : "Novo Ambiente"}</h2>
         <form className={styles.form}>
           <input
             type="text"

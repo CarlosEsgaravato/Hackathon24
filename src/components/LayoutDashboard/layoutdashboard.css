@@ -25,6 +25,7 @@ html, body, #__next {
   background-color: #1e3a5f;
   color: white;
   position: relative;
+  font-family: 'Poppins', sans-serif;
   z-index: 3;
 }
 
@@ -90,6 +91,7 @@ html, body, #__next {
 .sidebar li {
   padding: 10px;
   cursor: pointer;
+  font-family: 'Poppins', sans-serif;
 }
 
 .sidebar li:hover {

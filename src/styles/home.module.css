@@ -64,6 +64,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  font-family: 'Poppins', sans-serif;
   background-color: white;
   padding: 20px;
   border-radius: 8px;
@@ -90,19 +91,25 @@
 
 .environmentItem {
   display: flex;
-  justify-content: space-between; /* Alinha os itens nas extremidades */
-  align-items: center; /* Alinha verticalmente */
+  flex-direction: column; /* Mantém empilhamento para os detalhes */
   padding: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 5px;
   background-color: #f9f9f9;
-  margin-bottom: 10px; /* Espaço entre os itens */
+  margin-bottom: 10px;
 }
+
 
 /* Nome do ambiente */
 .environmentItem p {
   margin: 0;
   flex-grow: 1; /* Faz o nome ocupar o restante do espaço */
+}
+
+.environmentHeader {
+  display: flex;
+  justify-content: space-between; /* Nome e botões ficam nas extremidades */
+  align-items: center; /* Alinha verticalmente */
 }
 
 /* Botões dentro do item */
@@ -112,7 +119,8 @@
   border-radius: 5px;
   cursor: pointer;
   font-family: 'Poppins', sans-serif;
-  margin-left: 10px; /* Espaço entre os botões */
+  margin-right: 10px; /* Espaço entre os botões */
+  align-self: flex-start; /* Alinha os botões no topo */
 }
 
 /* Estilo do botão de "Ver Detalhes" */
@@ -141,15 +149,17 @@
 .environmentDetails {
   margin-top: 10px;
   text-align: left;
-  display: none; /* Escondido por padrão */
   overflow: hidden;
-  transition: height 0.3s ease-out; /* Transição suave da altura */
-  height: 0; /* Começa com a altura 0 */
+  transition: max-height 0.3s ease-out;
+  max-height: 0; /* Inicialmente escondido */
+  display: flex;
+  flex-direction: column; /* Detalhes empilhados verticalmente */
 }
 
 .environmentItem.expanded .environmentDetails {
-  display: block; /* Mostra detalhes ao expandir */
-  height: auto;
+  max-height: 300px; /* Expande para mostrar conteúdo */
+  padding-top: 10px;
+  border-top: 1px solid #e0e0e0; /* Linha para separar os detalhes */
 }
 
 /* Botão de fechar o modal */
@@ -170,6 +180,14 @@
 
 /* Responsividade */
 @media (max-width: 768px) {
+
+  .detailsButton,
+  .reserveButton {
+    margin-right: 0; /* Remove margem entre botões */
+    margin-bottom: 10px; /* Espaço vertical */
+    width: 100%; /* Ocupa toda a largura */
+  }
+
   .border {
     padding: 20px;
   }

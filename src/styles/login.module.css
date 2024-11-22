@@ -9,7 +9,8 @@
     height: 100vh;
     background-color: #f0f2f5; /* Fundo suave */
     padding: 20px; /* Adiciona padding para responsividade */
-    font-family: 'Poppins', sans-serif; /* Aplica a fonte a todos os elementos dentro de .main */
+    font-family: 'Poppins', sans-serif;
+    
 }
 
 .border {

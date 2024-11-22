@@ -1,61 +1,66 @@
-'use client';
-import { useState, useEffect } from 'react';
-import LayoutDashboard from '../components/LayoutDashboard';
-import styles from '../styles/home.module.css';
-import { FaMicrophone, FaDesktop, FaBook, FaChalkboardTeacher } from 'react-icons/fa';
-import Modal from 'react-modal';
-import { useRouter } from 'next/navigation';
-import axios from 'axios';
+"use client";
+import { useState, useEffect } from "react";
+import LayoutDashboard from "../components/LayoutDashboard";
+import styles from "../styles/home.module.css";
+import {
+  FaMicrophone,
+  FaDesktop,
+  FaBook,
+  FaChalkboardTeacher,
+} from "react-icons/fa";
+import Modal from "react-modal";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 // Configurar o elemento raiz para o react-modal
-Modal.setAppElement('#__next');
+Modal.setAppElement("#__next");
 
 const HomePage = () => {
-  const [environments, setEnvironments] = useState([]);
+  const [ambientes, setAmbientes] = useState([]); // Alterado de environments para ambientes
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedType, setSelectedType] = useState(null); // Para armazenar o tipo de ambiente selecionado
-  const [selectedEnvironments, setSelectedEnvironments] = useState([]); // Para armazenar os ambientes daquele tipo
+  const [selectedAmbientes, setSelectedAmbientes] = useState([]); // Alterado para armazenar ambientes
   const [expandedItem, setExpandedItem] = useState(null); // Para controlar quais detalhes estão expandidos
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      router.push('/login'); // Redireciona para o login se não estiver autenticado
+      router.push("/login"); // Redireciona para o login se não estiver autenticado
     } else {
       axios
-        .get('http://localhost:8000/environments') // Obtendo os dados do DB JSON
+        .get("http://localhost:8000/ambientes") // Chamada para a tabela "ambientes"
         .then((response) => {
-          setEnvironments(response.data); // Armazenando os ambientes no estado
+          setAmbientes(response.data); // Armazena os dados na variável "ambientes"
         })
         .catch((error) => {
-          console.error('Erro ao buscar dados:', error);
+          console.error("Erro ao buscar dados:", error);
         });
     }
   }, [router]);
 
   const openModal = (type) => {
-    const filteredEnvironments = environments.filter((env) => env.tipo === type);
+    const filteredAmbientes = ambientes.filter((amb) => amb.tipo === type); // Alterado para ambientes
     setSelectedType(type); // Setando o tipo de ambiente selecionado
-    setSelectedEnvironments(filteredEnvironments); // Setando os ambientes daquele tipo
+    setSelectedAmbientes(filteredAmbientes); // Alterado para ambientes
     setModalIsOpen(true); // Abrindo o modal
   };
 
   const closeModal = () => {
     setModalIsOpen(false); // Fechando o modal
-    setSelectedEnvironments([]); // Limpando os ambientes selecionados
+    setSelectedAmbientes([]); // Limpando os ambientes selecionados
     setSelectedType(null); // Limpando o tipo selecionado
   };
 
   const getIconForType = (type) => {
     switch (type) {
-      case 'Auditório':
+      case "Auditório":
         return <FaMicrophone />;
-      case 'Laboratório':
+      case "Laboratório":
         return <FaDesktop />;
-      case 'Biblioteca':
+      case "Biblioteca":
         return <FaBook />;
-      case 'Sala':
+      case "Sala":
         return <FaChalkboardTeacher />;
       default:
         return <FaBook />;
@@ -63,12 +68,12 @@ const HomePage = () => {
   };
 
   const toggleDetails = (item) => {
-    console.log('Clicando em:', item); // Verifique se está recebendo o objeto correto
+    console.log("Clicando em:", item); // Verifique se está recebendo o objeto correto
     setExpandedItem(expandedItem?.id === item.id ? null : item); // Altera para null ou o item selecionado
   };
 
   // Definir tipos únicos de ambientes
-  const uniqueTypes = [...new Set(environments.map((env) => env.tipo))];
+  const uniqueTypes = [...new Set(ambientes.map((amb) => amb.tipo))]; // Alterado para ambientes
 
   return (
     <LayoutDashboard>
@@ -89,39 +94,59 @@ const HomePage = () => {
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
-        contentLabel="Environment Modal"
+        contentLabel="Ambiente Modal" // Alterado o título
         className={styles.modal}
         overlayClassName={styles.overlay}
       >
         <h2>{selectedType}</h2> {/* Título do tipo de ambiente */}
         <div className={styles.environmentList}>
-          {selectedEnvironments.map((environment) => (
-            <div key={environment.id} className={styles.environmentItem}>
-              {/* Exibindo o nome do ambiente */}
-              <p>{environment.nome}</p>
+          {selectedAmbientes.map((ambiente) => ( // Alterado para ambientes
+            <div
+              key={ambiente.id}
+              className={`${styles.environmentItem} ${
+                expandedItem?.id === ambiente.id ? styles.expanded : ""
+              }`}
+            >
+              <div className={styles.environmentHeader}>
+                <p>{ambiente.nome}</p>
 
-              {/* Botão de Ver Detalhes */}
-              <button
-                onClick={() => toggleDetails(environment)} // Passando o ambiente correto
-                className={styles.detailsButton}
-              >
-                {expandedItem?.id === environment.id
-                  ? 'Esconder Detalhes'
-                  : 'Ver Detalhes'}
-              </button>
+                <div>
+                  {/* Botão de Ver Detalhes */}
+                  <button
+                    onClick={() => toggleDetails(ambiente)}
+                    className={styles.detailsButton}
+                  >
+                    {expandedItem?.id === ambiente.id
+                      ? "Esconder Detalhes"
+                      : "Ver Detalhes"}
+                  </button>
 
-              {/* Botão de Reservar */}
-              <button className={styles.reserveButton}>Reservar</button>
+                  {/* Botão de Reservar */}
+                  <button className={styles.reserveButton}>Reservar</button>
+                </div>
+              </div>
 
-              {/* Detalhes do ambiente (expandido quando necessário) */}
-              {expandedItem?.id === environment.id && (
+              {/* Detalhes do ambiente */}
+              {expandedItem?.id === ambiente.id && (
                 <div className={styles.environmentDetails}>
-                  <p><strong>Status:</strong> {environment.status}</p>
-                  <p><strong>Equipamentos:</strong> {environment.equipamentos}</p>
-                  <p><strong>Horário de Início:</strong> {environment.horario_inicio}</p>
-                  <p><strong>Horário de Fim:</strong> {environment.horario_fim}</p>
-                  <p><strong>Localização:</strong> {environment.localizacao}</p>
-                  <p><strong>Descrição:</strong> {environment.descricao}</p>
+                  <p>
+                    <strong>Status:</strong> {ambiente.status || "Não informado"}
+                  </p>
+                  <p>
+                    <strong>Equipamentos:</strong> {ambiente.equipamentos || "Não informado"}
+                  </p>
+                  <p>
+                    <strong>Horário de Início:</strong> {ambiente.horario_inicio || "Não informado"}
+                  </p>
+                  <p>
+                    <strong>Horário de Fim:</strong> {ambiente.horario_fim || "Não informado"}
+                  </p>
+                  <p>
+                    <strong>Localização:</strong> {ambiente.localizacao || "Não informado"}
+                  </p>
+                  <p>
+                    <strong>Descrição:</strong> {ambiente.descricao || "Não informado"}
+                  </p>
                 </div>
               )}
             </div>

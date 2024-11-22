@@ -22,7 +22,7 @@
       "funcao": "usuario"
     }
   ],
-  "environments": [
+  "ambientes": [
     {
       "id": "1",
       "nome": "Auditório 1",
