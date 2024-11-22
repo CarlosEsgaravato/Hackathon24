@@ -100,57 +100,72 @@ const HomePage = () => {
       >
         <h2>{selectedType}</h2> {/* Título do tipo de ambiente */}
         <div className={styles.environmentList}>
-          {selectedAmbientes.map((ambiente) => ( // Alterado para ambientes
-            <div
-              key={ambiente.id}
-              className={`${styles.environmentItem} ${
-                expandedItem?.id === ambiente.id ? styles.expanded : ""
-              }`}
-            >
-              <div className={styles.environmentHeader}>
-                <p>{ambiente.nome}</p>
+          {selectedAmbientes.map(
+            (
+              ambiente // Alterado para ambientes
+            ) => (
+              <div
+                key={ambiente.id}
+                className={`${styles.environmentItem} ${
+                  expandedItem?.id === ambiente.id ? styles.expanded : ""
+                }`}
+              >
+                <div className={styles.environmentHeader}>
+                  <p>{ambiente.nome}</p>
 
-                <div>
-                  {/* Botão de Ver Detalhes */}
-                  <button
-                    onClick={() => toggleDetails(ambiente)}
-                    className={styles.detailsButton}
-                  >
-                    {expandedItem?.id === ambiente.id
-                      ? "Esconder Detalhes"
-                      : "Ver Detalhes"}
-                  </button>
+                  <div>
+                    {/* Botão de Ver Detalhes */}
+                    <button
+                      onClick={() => toggleDetails(ambiente)}
+                      className={styles.detailsButton}
+                    >
+                      {expandedItem?.id === ambiente.id
+                        ? "Esconder Detalhes"
+                        : "Ver Detalhes"}
+                    </button>
 
-                  {/* Botão de Reservar */}
-                  <button className={styles.reserveButton}>Reservar</button>
+                    {/* Botão de Reservar */}
+                    <button
+                      className={styles.reserveButton}
+                      onClick={() => router.push("/reservas")} // Redireciona para /reservas
+                    >
+                      Reservar
+                    </button>
+                  </div>
                 </div>
+
+                {/* Detalhes do ambiente */}
+                {expandedItem?.id === ambiente.id && (
+                  <div className={styles.environmentDetails}>
+                    <p>
+                      <strong>Status:</strong>{" "}
+                      {ambiente.status || "Não informado"}
+                    </p>
+                    <p>
+                      <strong>Equipamentos:</strong>{" "}
+                      {ambiente.equipamentos || "Não informado"}
+                    </p>
+                    <p>
+                      <strong>Horário de Início:</strong>{" "}
+                      {ambiente.horario_inicio || "Não informado"}
+                    </p>
+                    <p>
+                      <strong>Horário de Fim:</strong>{" "}
+                      {ambiente.horario_fim || "Não informado"}
+                    </p>
+                    <p>
+                      <strong>Localização:</strong>{" "}
+                      {ambiente.localizacao || "Não informado"}
+                    </p>
+                    <p>
+                      <strong>Descrição:</strong>{" "}
+                      {ambiente.descricao || "Não informado"}
+                    </p>
+                  </div>
+                )}
               </div>
-
-              {/* Detalhes do ambiente */}
-              {expandedItem?.id === ambiente.id && (
-                <div className={styles.environmentDetails}>
-                  <p>
-                    <strong>Status:</strong> {ambiente.status || "Não informado"}
-                  </p>
-                  <p>
-                    <strong>Equipamentos:</strong> {ambiente.equipamentos || "Não informado"}
-                  </p>
-                  <p>
-                    <strong>Horário de Início:</strong> {ambiente.horario_inicio || "Não informado"}
-                  </p>
-                  <p>
-                    <strong>Horário de Fim:</strong> {ambiente.horario_fim || "Não informado"}
-                  </p>
-                  <p>
-                    <strong>Localização:</strong> {ambiente.localizacao || "Não informado"}
-                  </p>
-                  <p>
-                    <strong>Descrição:</strong> {ambiente.descricao || "Não informado"}
-                  </p>
-                </div>
-              )}
-            </div>
-          ))}
+            )
+          )}
         </div>
         <button onClick={closeModal} className={styles.closeButton}>
           Fechar

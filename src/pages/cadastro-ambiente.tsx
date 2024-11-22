@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
 import LayoutDashboard from "@/components/LayoutDashboard";
@@ -7,7 +7,7 @@ import styles from "@/styles/cadastroAmbiente.module.css";
 import axios from "axios";
 
 // Configurar o elemento raiz para o react-modal
-Modal.setAppElement('#__next');
+Modal.setAppElement("#__next");
 
 const CadastroAmbiente = () => {
   const [ambientes, setAmbientes] = useState([]);
@@ -20,17 +20,18 @@ const CadastroAmbiente = () => {
     horario_inicio: "",
     horario_fim: "",
     localizacao: "",
-    descricao: ""
+    descricao: "",
   });
   const [editingAmbienteId, setEditingAmbienteId] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/ambientes")
-      .then(response => {
+    axios
+      .get("http://localhost:8000/ambientes")
+      .then((response) => {
         console.log("Ambientes carregados:", response.data);
         setAmbientes(response.data);
       })
-      .catch(error => console.error("Erro ao buscar ambientes:", error));
+      .catch((error) => console.error("Erro ao buscar ambientes:", error));
   }, []);
 
   const openModal = (ambiente = null) => {
@@ -46,7 +47,7 @@ const CadastroAmbiente = () => {
         horario_inicio: "",
         horario_fim: "",
         localizacao: "",
-        descricao: ""
+        descricao: "",
       });
       setEditingAmbienteId(null);
     }
@@ -63,7 +64,7 @@ const CadastroAmbiente = () => {
       horario_inicio: "",
       horario_fim: "",
       localizacao: "",
-      descricao: ""
+      descricao: "",
     });
   };
 
@@ -78,7 +79,9 @@ const CadastroAmbiente = () => {
         .put(`http://localhost:8000/ambientes/${editingAmbienteId}`, formData)
         .then(() => {
           setAmbientes((prev) =>
-            prev.map((ambiente) => (ambiente.id === editingAmbienteId ? formData : ambiente))
+            prev.map((ambiente) =>
+              ambiente.id === editingAmbienteId ? formData : ambiente
+            )
           );
           closeModal();
         })
@@ -134,7 +137,10 @@ const CadastroAmbiente = () => {
                 <td>{ambiente.equipamentos}</td>
                 <td>{`${ambiente.horario_inicio} - ${ambiente.horario_fim}`}</td>
                 <td>{ambiente.localizacao}</td>
-                <td className={styles.descriptionCell} data-description={ambiente.descricao}>
+                <td
+                  className={styles.descriptionCell}
+                  data-description={ambiente.descricao}
+                >
                   {ambiente.descricao}
                 </td>
                 <td>
@@ -163,16 +169,23 @@ const CadastroAmbiente = () => {
         className={styles.modal}
         overlayClassName={styles.overlay}
       >
-        <h2>{editingAmbienteId ? "Editar Ambiente" : "Novo Ambiente"}</h2>
+        <h2 className={styles.modalTitle}>
+          {editingAmbienteId ? "Editar Ambiente" : "Novo Ambiente"}
+        </h2>
         <form className={styles.form}>
+          <label htmlFor="nome">Nome</label>
           <input
             type="text"
+            id="nome"
             name="nome"
             placeholder="Nome"
             value={formData.nome}
             onChange={handleInputChange}
           />
+
+          <label htmlFor="tipo">Tipo</label>
           <select
+            id="tipo"
             name="tipo"
             value={formData.tipo}
             onChange={handleInputChange}
@@ -182,7 +195,10 @@ const CadastroAmbiente = () => {
             <option value="Auditório">Auditório</option>
             <option value="Biblioteca">Biblioteca</option>
           </select>
+
+          <label htmlFor="status">Status</label>
           <select
+            id="status"
             name="status"
             value={formData.status}
             onChange={handleInputChange}
@@ -191,54 +207,71 @@ const CadastroAmbiente = () => {
             <option value="Indisponivel">Indisponível</option>
             <option value="Manutencao">Manutenção</option>
           </select>
+
+          <label htmlFor="equipamentos">Equipamentos</label>
           <input
             type="text"
+            id="equipamentos"
             name="equipamentos"
             placeholder="Equipamentos"
             value={formData.equipamentos}
             onChange={handleInputChange}
           />
+
           <div className={styles.timeInputs}>
+            <label htmlFor="horario_inicio">Horário Início</label>
             <input
               type="time"
+              id="horario_inicio"
               name="horario_inicio"
               value={formData.horario_inicio}
               onChange={handleInputChange}
             />
+            <label htmlFor="horario_fim">Horário Fim</label>
             <input
               type="time"
+              id="horario_fim"
               name="horario_fim"
               value={formData.horario_fim}
               onChange={handleInputChange}
             />
           </div>
+
+          <label htmlFor="localizacao">Localização</label>
           <input
             type="text"
+            id="localizacao"
             name="localizacao"
             placeholder="Localização"
             value={formData.localizacao}
             onChange={handleInputChange}
           />
+
+          <label htmlFor="descricao">Descrição</label>
           <textarea
+            id="descricao"
             name="descricao"
             placeholder="Descrição"
             value={formData.descricao}
             onChange={handleInputChange}
           />
-          <button
-            type="button"
-            onClick={handleSave}
-            className={styles.saveButton}
-          >
-            Salvar
-          </button>
-          <button
-            type="button"
-            onClick={closeModal}
-            className={styles.cancelButton}
-          >
-            Cancelar
-          </button>
+
+          <div className={styles.buttonGroup}>
+            <button
+              type="button"
+              onClick={handleSave}
+              className={`${styles.saveButton}`}
+            >
+              Salvar
+            </button>
+            <button
+              type="button"
+              onClick={closeModal}
+              className={`${styles.cancelButton}`}
+            >
+              Cancelar
+            </button>
+          </div>
         </form>
       </Modal>
     </LayoutDashboard>
