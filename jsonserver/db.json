@@ -1,5 +1,5 @@
 {
-  "users": [
+  "usuarios": [
     {
       "id": "1",
       "usuario": "admin",
@@ -99,17 +99,48 @@
       "horario_fim": "18:00",
       "localizacao": "Prédio G",
       "descricao": "Sala de aula com capacidade para 30 alunos."
+    }
+  ],
+  "reservas": [
+    {
+      "id": "1",
+      "usuario_id": "2",
+      "ambiente": "Auditório 1",
+      "horario_inicio": "08:00",
+      "horario_fim": "09:00",
+      "statusReserva": "reservado",
+      "status": "ativo",
+      "data": "2024-11-23"
     },
     {
-      "id": "8",
-      "nome": "Sala 2",
-      "tipo": "Sala",
-      "status": "Manutencao",
-      "equipamentos": "Quadro, Data show",
+      "id": "2",
+      "usuario_id": "3",
+      "ambiente": "Auditório 1",
+      "horario_inicio": "09:00",
+      "horario_fim": "10:00",
+      "statusReserva": "reservado",
+      "status": "ativo",
+      "data": "2024-11-23"
+    },
+    {
+      "id": "3",
+      "usuario_id": "3",
+      "ambiente": "Auditório 1",
+      "horario_inicio": "10:00",
+      "horario_fim": "11:00",
+      "statusReserva": "reservado",
+      "status": "ativo",
+      "data": "2024-11-23"
+    },
+    {
+      "id": "4",
+      "usuario_id": "2",
+      "ambiente": "Lab 01",
       "horario_inicio": "08:00",
-      "horario_fim": "18:00",
-      "localizacao": "Prédio H",
-      "descricao": "Sala de aula com capacidade para 25 alunos."
+      "horario_fim": "09:00",
+      "statusReserva": "reservado",
+      "status": "ativo",
+      "data": "2024-11-23"
     }
   ]
 }

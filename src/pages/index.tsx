@@ -106,9 +106,8 @@ const HomePage = () => {
             ) => (
               <div
                 key={ambiente.id}
-                className={`${styles.environmentItem} ${
-                  expandedItem?.id === ambiente.id ? styles.expanded : ""
-                }`}
+                className={`${styles.environmentItem} ${expandedItem?.id === ambiente.id ? styles.expanded : ""
+                  }`}
               >
                 <div className={styles.environmentHeader}>
                   <p>{ambiente.nome}</p>
@@ -127,7 +126,7 @@ const HomePage = () => {
                     {/* Botão de Reservar */}
                     <button
                       className={styles.reserveButton}
-                      onClick={() => router.push("/reservas")} // Redireciona para /reservas
+                      onClick={() => router.push(`/reservas?id=${ambiente.id}`)} // Passa o ID como query
                     >
                       Reservar
                     </button>

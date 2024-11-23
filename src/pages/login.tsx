@@ -27,7 +27,7 @@ export default function Login() {
       const email = target.email.value;
       const password = target.password.value;
 
-      axios.get('http://localhost:8000/users')
+      axios.get('http://localhost:8000/usuarios')
         .then((response) => {
           const user = response.data.find((user: any) => user.email === email && user.senha === password);
 

@@ -10,7 +10,7 @@ import axios from "axios";
 Modal.setAppElement('#__next');
 
 const CadastroUsuario = () => {
-  const [users, setUsers] = useState([]);
+  const [usuarios, setUsuarios] = useState([]); // Atualizado para 'usuarios'
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     usuario: "",
@@ -22,8 +22,8 @@ const CadastroUsuario = () => {
 
   // Carregar lista de usuários
   useEffect(() => {
-    axios.get("http://localhost:8000/users")
-      .then(response => setUsers(response.data))
+    axios.get("http://localhost:8000/usuarios") // Alterado endpoint para 'usuarios'
+      .then(response => setUsuarios(response.data)) // Atualizado para 'usuarios'
       .catch(error => console.error("Erro ao buscar usuários:", error));
   }, []);
 
@@ -62,9 +62,9 @@ const CadastroUsuario = () => {
     if (editingUserId) {
       // Atualizar usuário existente
       axios
-        .put(`http://localhost:8000/users/${editingUserId}`, formData)
+        .put(`http://localhost:8000/usuarios/${editingUserId}`, formData) // Alterado endpoint para 'usuarios'
         .then(() => {
-          setUsers((prev) =>
+          setUsuarios((prev) =>
             prev.map((user) => (user.id === editingUserId ? formData : user))
           );
           closeModal();
@@ -72,16 +72,16 @@ const CadastroUsuario = () => {
         .catch((error) => console.error("Erro ao atualizar usuário:", error));
     } else {
       // Criar novo usuário com ID como string incremental
-      const newId = users.length > 0 
-        ? (Math.max(...users.map((u) => parseInt(u.id))) + 1).toString() 
+      const newId = usuarios.length > 0 
+        ? (Math.max(...usuarios.map((u) => parseInt(u.id))) + 1).toString() 
         : "1";
   
       const newUser = { ...formData, id: newId };
   
       axios
-        .post("http://localhost:8000/users", newUser)
+        .post("http://localhost:8000/usuarios", newUser) // Alterado endpoint para 'usuarios'
         .then((response) => {
-          setUsers((prev) => [...prev, response.data]);
+          setUsuarios((prev) => [...prev, response.data]);
           closeModal();
         })
         .catch((error) => console.error("Erro ao criar usuário:", error));
@@ -90,9 +90,9 @@ const CadastroUsuario = () => {
 
   const handleDelete = (id) => {
     axios
-      .delete(`http://localhost:8000/users/${id}`)
+      .delete(`http://localhost:8000/usuarios/${id}`) // Alterado endpoint para 'usuarios'
       .then(() => {
-        setUsers((prev) => prev.filter((user) => user.id !== id));
+        setUsuarios((prev) => prev.filter((user) => user.id !== id));
       })
       .catch((error) => console.error("Erro ao excluir usuário:", error));
   };
@@ -116,7 +116,7 @@ const CadastroUsuario = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+            {usuarios.map((user) => (
               <tr key={user.id}>
                 <td>{user.id}</td>
                 <td>{user.usuario}</td>
