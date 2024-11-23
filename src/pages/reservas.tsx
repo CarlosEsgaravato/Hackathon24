@@ -20,7 +20,7 @@ const Reservas = () => {
   useEffect(() => {
     // Simulando um ID de usuário logado, normalmente esse valor viria do contexto ou do login
     axios
-      .get('http://localhost:8000/usuarios')
+      .get('http://localhost:8000/api/usuarios')
       .then((response) => {
         setUsuarios(response.data);
         const usuario = response.data.find((u) => u.usuario === 'user'); // Exemplo: usuário com nome "user"
@@ -33,9 +33,10 @@ const Reservas = () => {
     if (ambienteId) {
       // Busca os detalhes do ambiente
       axios
-        .get(`http://localhost:8000/ambientes/${ambienteId}`)
+        .get(`http://localhost:8000/api/ambientes/${ambienteId}`)
         .then((response) => {
           setAmbiente(response.data);
+          console.log(ambiente.tipo)
         })
         .catch((error) => {
           console.error('Erro ao carregar ambiente:', error);
@@ -44,7 +45,7 @@ const Reservas = () => {
 
     // Carregar todas as reservas existentes
     axios
-      .get(`http://localhost:8000/reservas`)
+      .get(`http://localhost:8000/api/reservas`)
       .then((response) => {
         setReservas(response.data);
       })
@@ -62,7 +63,7 @@ const Reservas = () => {
 
       axios
         .get(
-          `http://localhost:8000/reservas?ambiente=${ambiente.nome}&data=${selectedDate}`
+          `http://localhost:8000/api/reservas?ambiente=${ambiente.nome}&data=${selectedDate}`
         )
         .then((response) => {
           const reservas = response.data;
@@ -123,7 +124,7 @@ const Reservas = () => {
 
     // Criar nova reserva com o ID auto-incrementado
     axios
-      .post('http://localhost:8000/reservas', {
+      .post('http://localhost:8000/api/reservas', {
         id: novoId, // ID auto-incrementado
         usuario_id: usuarioLogado.id, // Usar o ID do usuário logado
         ambiente: ambiente.nome,
@@ -163,7 +164,7 @@ const Reservas = () => {
 
   const handleCancelar = (idReserva, horario) => {
     axios
-      .delete(`http://localhost:8000/reservas/${idReserva}`)
+      .delete(`http://localhost:8000/api/reservas/${idReserva}`)
       .then(() => {
         alert(`Reserva cancelada para o horário: ${horario}`);
         setHorarios((prevHorarios) =>

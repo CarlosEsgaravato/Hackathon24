@@ -22,7 +22,7 @@ const CadastroUsuario = () => {
 
   // Carregar lista de usuários
   useEffect(() => {
-    axios.get("http://localhost:8000/usuarios") // Alterado endpoint para 'usuarios'
+    axios.get("http://localhost:8000/api/usuarios") // Alterado endpoint para 'usuarios'
       .then(response => setUsuarios(response.data)) // Atualizado para 'usuarios'
       .catch(error => console.error("Erro ao buscar usuários:", error));
   }, []);
@@ -62,7 +62,7 @@ const CadastroUsuario = () => {
     if (editingUserId) {
       // Atualizar usuário existente
       axios
-        .put(`http://localhost:8000/usuarios/${editingUserId}`, formData) // Alterado endpoint para 'usuarios'
+        .put(`http://localhost:8000/api/usuarios/${editingUserId}`, formData) // Alterado endpoint para 'usuarios'
         .then(() => {
           setUsuarios((prev) =>
             prev.map((user) => (user.id === editingUserId ? formData : user))
@@ -79,7 +79,7 @@ const CadastroUsuario = () => {
       const newUser = { ...formData, id: newId };
   
       axios
-        .post("http://localhost:8000/usuarios", newUser) // Alterado endpoint para 'usuarios'
+        .post("http://localhost:8000/api/usuarios", newUser) // Alterado endpoint para 'usuarios'
         .then((response) => {
           setUsuarios((prev) => [...prev, response.data]);
           closeModal();
@@ -90,7 +90,7 @@ const CadastroUsuario = () => {
 
   const handleDelete = (id) => {
     axios
-      .delete(`http://localhost:8000/usuarios/${id}`) // Alterado endpoint para 'usuarios'
+      .delete(`http://localhost:8000/api/usuarios/${id}`) // Alterado endpoint para 'usuarios'
       .then(() => {
         setUsuarios((prev) => prev.filter((user) => user.id !== id));
       })

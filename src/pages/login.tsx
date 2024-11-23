@@ -3,16 +3,15 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import styles from '../styles/Login.module.css';
 
-export default function Login() {
+const Login = () => {
   const router = useRouter();
   const refForm = useRef<HTMLFormElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isToast, setIsToast] = useState(false);
 
-  // Verifica se o usuário já está logado ao acessar a página
   if (typeof window !== "undefined" && localStorage.getItem('token')) {
-    router.push('/'); // Se o token estiver presente, redireciona para a página inicial
+    router.push('/');
   }
 
   const submitForm = useCallback((event: React.FormEvent<HTMLFormElement>) => {
@@ -26,27 +25,19 @@ export default function Login() {
       };
       const email = target.email.value;
       const password = target.password.value;
-
-      axios.get('http://localhost:8000/usuarios')
-        .then((response) => {
-          const user = response.data.find((user: any) => user.email === email && user.senha === password);
-
-          if (user) {
-            const token = `${user.id}:${user.email}:${new Date().getTime()}`;
-            localStorage.setItem('token', JSON.stringify({ token, funcao: user.funcao }));
-
-            // Redireciona para a página principal após o login
-            router.push('/');
-          } else {
-            setIsLoading(false);
-            setIsToast(true);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          setIsLoading(false);
-          setIsToast(true);
-        });
+      
+      axios.post('http://localhost:8000/api/login', { email, password })
+      .then((response) => {
+        const { token } = response.data;
+        localStorage.setItem('token', token);
+        router.push('/');
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+        setIsLoading(false);
+        setIsToast(true);
+      });
+    
     } else {
       if (refForm.current) {
         refForm.current.classList.add('was-validated');
@@ -83,4 +74,6 @@ export default function Login() {
       </div>
     </div>
   );
-}
+};
+
+export default Login;

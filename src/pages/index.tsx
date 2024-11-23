@@ -25,19 +25,27 @@ const HomePage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log(token)
     if (!token) {
       router.push("/login"); // Redireciona para o login se não estiver autenticado
     } else {
       axios
-        .get("http://localhost:8000/ambientes") // Chamada para a tabela "ambientes"
+        .get("http://localhost:8000/api/ambientes", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
         .then((response) => {
-          setAmbientes(response.data); // Armazena os dados na variável "ambientes"
+          setAmbientes(response.data);
         })
         .catch((error) => {
           console.error("Erro ao buscar dados:", error);
+          console.error("Erro específico:", error.response);
         });
     }
   }, [router]);
+  
+  
 
   const openModal = (type) => {
     const filteredAmbientes = ambientes.filter((amb) => amb.tipo === type); // Alterado para ambientes
