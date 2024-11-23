@@ -26,7 +26,7 @@ const CadastroAmbiente = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/ambientes")
+      .get("http://localhost:8000/api/ambientes")
       .then((response) => {
         console.log("Ambientes carregados:", response.data);
         setAmbientes(response.data);
@@ -58,7 +58,7 @@ const CadastroAmbiente = () => {
     setModalIsOpen(false);
     setFormData({
       nome: "",
-      tipo: "Lab",
+      tipo: "",
       status: "Disponivel",
       equipamentos: "",
       horario_inicio: "",
@@ -76,7 +76,7 @@ const CadastroAmbiente = () => {
   const handleSave = () => {
     if (editingAmbienteId) {
       axios
-        .put(`http://localhost:8000/ambientes/${editingAmbienteId}`, formData)
+        .put(`http://localhost:8000/api/ambientes/${editingAmbienteId}`, formData)
         .then(() => {
           setAmbientes((prev) =>
             prev.map((ambiente) =>
@@ -88,7 +88,7 @@ const CadastroAmbiente = () => {
         .catch((error) => console.error("Erro ao atualizar ambiente:", error));
     } else {
       axios
-        .post("http://localhost:8000/ambientes", formData)
+        .post("http://localhost:8000/api/ambientes", formData)
         .then((response) => {
           setAmbientes((prev) => [...prev, response.data]);
           closeModal();
@@ -99,7 +99,7 @@ const CadastroAmbiente = () => {
 
   const handleDelete = (id) => {
     axios
-      .delete(`http://localhost:8000/ambientes/${id}`)
+      .delete(`http://localhost:8000/api/ambientes/${id}`)
       .then(() => {
         setAmbientes((prev) => prev.filter((ambiente) => ambiente.id !== id));
       })
@@ -190,7 +190,7 @@ const CadastroAmbiente = () => {
             value={formData.tipo}
             onChange={handleInputChange}
           >
-            <option value="Lab">Laboratório</option>
+            <option value="Laboratório">Laboratório</option>
             <option value="Sala">Sala</option>
             <option value="Auditório">Auditório</option>
             <option value="Biblioteca">Biblioteca</option>
