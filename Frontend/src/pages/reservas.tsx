@@ -13,18 +13,16 @@ const Reservas = () => {
   const [ambiente, setAmbiente] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [horarios, setHorarios] = useState([]);
-  const [usuarioLogado, setUsuarioLogado] = useState(null); // Agora precisamos garantir que o usuário logado seja identificado corretamente
+  const [selectedUserId, setSelectedUserId] = useState(''); // Usuário selecionado
   const [reservas, setReservas] = useState([]); // Para armazenar as reservas existentes
   const [usuarios, setUsuarios] = useState([]); // Para armazenar os usuários
 
   useEffect(() => {
-    // Simulando um ID de usuário logado, normalmente esse valor viria do contexto ou do login
+    // Carregar a lista de usuários
     axios
       .get('http://localhost:8000/api/usuarios')
       .then((response) => {
         setUsuarios(response.data);
-        const usuario = response.data.find((u) => u.usuario === 'user'); // Exemplo: usuário com nome "user"
-        setUsuarioLogado(usuario); // Define o usuário logado com base no nome
       })
       .catch((error) => {
         console.error('Erro ao carregar usuários:', error);
@@ -66,19 +64,17 @@ const Reservas = () => {
         )
         .then((response) => {
           const reservas = response.data.data;
-          console.log(response)
 
           const horariosAtualizados = horariosGerados.map((h) => {
-            const reserva = reservas ? reservas.find(
+            const reserva = reservas?.find(
               (r) => r.horario_inicio === h.horario.split(' - ')[0]
-            ) : null;
-          
+            );
+
             return {
               ...h,
               status: reserva ? 'reservado' : 'disponível',
             };
           });
-          
 
           setHorarios(horariosAtualizados);
         })
@@ -104,31 +100,22 @@ const Reservas = () => {
     }
     return horariosGerados;
   };
-  
-  console.log(gerarHorarios);
-  
 
   const handleReservar = (horario) => {
     const [inicio, fim] = horario.split(' - ');
 
-    // Encontrar o maior ID já existente nas reservas
+    if (!selectedUserId) {
+      alert('Selecione um usuário para realizar a reserva.');
+      return;
+    }
+
     const maiorIdReserva = Math.max(...(reservas || []).map((r) => parseInt(r.id)), 0);
     const novoId = (maiorIdReserva + 1).toString(); // Incrementar o ID
 
-
-    // Garantir que o usuarioLogado tem um ID
-    // if (!usuarioLogado) {
-    //   alert('Você precisa estar logado para fazer uma reserva');
-    //   return;
-    // }
-
-    console.log('Usuario Logado:', usuarioLogado); // Verificando o ID do usuário logado
-
-    // Criar nova reserva com o ID auto-incrementado
     axios
       .post('http://localhost:8000/api/reservas', {
-        id: novoId, // ID auto-incrementado
-        usuario_id: "1", // Usar o ID do usuário logado
+        id: novoId,
+        usuario_id: selectedUserId, // Usar o ID do usuário selecionado
         ambiente_id: ambiente.id,
         horario_inicio: inicio,
         horario_fim: fim,
@@ -140,17 +127,15 @@ const Reservas = () => {
         alert(`Reserva realizada para o horário: ${horario}`);
         setHorarios((prevHorarios) =>
           prevHorarios.map((h) =>
-            h.horario === horario
-             
+            h.horario === horario ? { ...h, status: 'reservado' } : h
           )
         );
 
-        // Atualizar a lista de reservas
         setReservas((prevReservas) => [
-          ...prevReservas,
+          ...(prevReservas || []),
           {
             id: novoId,
-            usuario_id: "1", // Verifique se o usuário é o correto
+            usuario_id: selectedUserId,
             ambiente_id: ambiente.id,
             horario_inicio: inicio,
             horario_fim: fim,
@@ -161,26 +146,6 @@ const Reservas = () => {
         ]);
       })
       .catch((error) => console.error('Erro ao realizar reserva:', error));
-  };
-
-  const handleCancelar = (idReserva, horario) => {
-    axios
-      .delete(`http://localhost:8000/api/reservas/${idReserva}`)
-      .then(() => {
-        alert(`Reserva cancelada para o horário: ${horario}`);
-        setHorarios((prevHorarios) =>
-          prevHorarios.map((h) =>
-            h.idReserva === idReserva
-              ? { ...h, status: 'disponível', usuarioReserva: null }
-              : h
-          )
-        );
-
-        setReservas((prevReservas) =>
-          prevReservas.filter((r) => r.id !== idReserva)
-        );
-      })
-      .catch((error) => console.error('Erro ao cancelar reserva:', error));
   };
 
   return (
@@ -212,6 +177,23 @@ const Reservas = () => {
               />
             </div>
 
+            <div className={styles.formGroup}>
+              <label htmlFor="usuario">Selecione o Usuário:</label>
+              <select
+                id="usuario"
+                className={styles.input}
+                value={selectedUserId}
+                onChange={(e) => setSelectedUserId(e.target.value)}
+              >
+                <option value="">Selecione</option>
+                {usuarios.map((usuario) => (
+                  <option key={usuario.id} value={usuario.id}>
+                    {usuario.nome}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {selectedDate && (
               <div className={styles.horariosContainer}>
                 <h2 className={styles.subTitle}>Horários Disponíveis</h2>
@@ -240,16 +222,9 @@ const Reservas = () => {
                         >
                           Reservar
                         </button>
-                      ) : item.usuarioReserva === usuarioLogado?.id ? (
-                        <button
-                          className={styles.cancelarButton}
-                          onClick={() => handleCancelar(item.idReserva, item.horario)}
-                        >
-                          Cancelar Reserva
-                        </button>
                       ) : (
                         <span className={styles.reservadoText}>
-                          Reservado por {item.usuarioReserva}
+                          Reservado
                         </span>
                       )}
                     </li>
