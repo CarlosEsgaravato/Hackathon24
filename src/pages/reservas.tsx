@@ -18,7 +18,8 @@ const Reservas = () => {
   const [usuarios, setUsuarios] = useState([]); // Para armazenar os usuários
 
   useEffect(() => {
-    // Simulando um ID de usuário logado, normalmente esse valor viria do contexto ou do login
+    console.log('Ambiente ID:', ambienteId); // Log para depurar o ID
+  
     axios
       .get('http://localhost:8000/api/usuarios')
       .then((response) => {
@@ -29,30 +30,31 @@ const Reservas = () => {
       .catch((error) => {
         console.error('Erro ao carregar usuários:', error);
       });
-
+  
     if (ambienteId) {
-      // Busca os detalhes do ambiente
       axios
         .get(`http://localhost:8000/api/ambientes/${ambienteId}`)
         .then((response) => {
-          setAmbiente(response.data);
-          console.log(ambiente.tipo)
+          console.log('Resposta da API:', response.data); // Log para depurar a resposta
+          console.log('Horário de Início:', response.data.data.horario_inicio); // Log para depurar horário de início
+          console.log('Horário de Fim:', response.data.data.horario_fim); // Log para depurar horário de fim
+          setAmbiente(response.data.data);
         })
         .catch((error) => {
           console.error('Erro ao carregar ambiente:', error);
         });
     }
-
-    // Carregar todas as reservas existentes
+  
     axios
       .get(`http://localhost:8000/api/reservas`)
       .then((response) => {
-        setReservas(response.data);
+        setReservas(response.data.data);
       })
       .catch((error) => {
         console.error('Erro ao carregar reservas:', error);
       });
   }, [ambienteId]);
+  
 
   useEffect(() => {
     if (selectedDate && ambiente) {
@@ -66,9 +68,9 @@ const Reservas = () => {
           `http://localhost:8000/api/reservas?ambiente=${ambiente.nome}&data=${selectedDate}`
         )
         .then((response) => {
-          const reservas = response.data;
+          const reservas = response.data.data;
+          console.log('Reservas no horário selecionado:', reservas); // Log para depurar as reservas
 
-          // Atualizar os horários
           const horariosAtualizados = horariosGerados.map((h) => {
             const reserva = reservas.find(
               (r) => r.horario_inicio === h.horario.split(' - ')[0]
@@ -77,8 +79,8 @@ const Reservas = () => {
             return {
               ...h,
               status: reserva ? 'reservado' : 'disponível',
-              idReserva: reserva?.id, // ID da reserva, se existir
-              usuarioReserva: reserva?.usuario_id, // ID do usuário que fez a reserva
+              idReserva: reserva?.id,
+              usuarioReserva: reserva?.usuario_id,
             };
           });
 
@@ -110,23 +112,18 @@ const Reservas = () => {
   const handleReservar = (horario) => {
     const [inicio, fim] = horario.split(' - ');
 
-    // Encontrar o maior ID já existente nas reservas
     const maiorIdReserva = Math.max(...reservas.map((r) => parseInt(r.id)), 0);
-    const novoId = (maiorIdReserva + 1).toString(); // Incrementar o ID
+    const novoId = (maiorIdReserva + 1).toString();
 
-    // Garantir que o usuarioLogado tem um ID
     if (!usuarioLogado) {
       alert('Você precisa estar logado para fazer uma reserva');
       return;
     }
 
-    console.log('Usuario Logado:', usuarioLogado); // Verificando o ID do usuário logado
-
-    // Criar nova reserva com o ID auto-incrementado
     axios
       .post('http://localhost:8000/api/reservas', {
-        id: novoId, // ID auto-incrementado
-        usuario_id: usuarioLogado.id, // Usar o ID do usuário logado
+        id: novoId,
+        usuario_id: usuarioLogado.id,
         ambiente: ambiente.nome,
         horario_inicio: inicio,
         horario_fim: fim,
@@ -144,12 +141,11 @@ const Reservas = () => {
           )
         );
 
-        // Atualizar a lista de reservas
         setReservas((prevReservas) => [
           ...prevReservas,
           {
             id: novoId,
-            usuario_id: usuarioLogado.id, // Verifique se o usuário é o correto
+            usuario_id: usuarioLogado.id,
             ambiente: ambiente.nome,
             horario_inicio: inicio,
             horario_fim: fim,
