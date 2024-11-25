@@ -1,0 +1,62 @@
+# Define os serviços e recursos do Docker Compose
+services:
+  # Serviço Laravel (Backend)
+  app:
+    # Build especifica o diretório onde está o Dockerfile do Laravel
+    build:
+      context: ./backend  # Contexto do build (onde o Dockerfile do Laravel está localizado)
+      dockerfile: Dockerfile  # Nome do Dockerfile a ser usado para construir a imagem
+    container_name: laravel_app  # Nome personalizado para o contêiner Laravel
+    volumes:
+      - ./backend:/var/www/html  # Monta o diretório local `backend` dentro do contêiner em `/var/www/html`, facilitando o desenvolvimento local e as alterações em tempo real
+    environment:
+      - DB_HOST=db  # Define o host do banco de dados como o nome do serviço do MySQL
+      - DB_DATABASE=Hackathon  # Nome do banco de dados a ser usado no Laravel
+      - DB_USERNAME=root  # Usuário do banco de dados
+      - DB_PASSWORD=123456  # Senha do banco de dados
+    ports:
+      - "8000:8000"  # Mapeia a porta 8000 do contêiner Laravel para a máquina host
+    depends_on:
+      - db  # Define que o serviço do banco de dados deve estar pronto antes de iniciar o Laravel
+
+  frontend:
+    # Build especifica o diretório onde está o Dockerfile do React
+    build:
+      context: ./frontend  # Contexto do build (onde o Dockerfile do React está localizado)
+      dockerfile: Dockerfile  # Nome do Dockerfile a ser usado para construir a imagem
+    container_name: react_app  # Nome personalizado para o contêiner React
+    volumes:
+      - ./frontend:/app  # Monta o diretório local `frontend` no contêiner em `/app`, facilitando o desenvolvimento local
+      - ./frontend/node_modules:/app/node_modules  # Evita a remoção dos módulos do Node.js ao reiniciar o contêiner
+    ports:
+      - "3035:3000"  # Mapeia a porta 3000 do contêiner React para a porta 3035 do host
+    command: ["npm","run" ,"dev"]  # Comando para iniciar o servidor React
+
+  # Banco de Dados MySQL
+  db:
+    image: mysql:5.7  # Utiliza a imagem oficial do MySQL 5.7
+    container_name: mysql_db  # Nome personalizado para o contêiner MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456  # Senha para o usuário root do MySQL
+      MYSQL_DATABASE: Hackathon 
+      MYSQL_PASSWORD: 123456  # Senha para o banco de dados
+    ports:
+      - "3306:3306"  # Mapeia a porta 3306 do MySQL no contêiner para a máquina host
+    volumes:
+      - db_data:/var/lib/mysql  # Armazena os dados do MySQL em um volume nomeado para persistência
+
+  # PHPMyAdmin para gerenciar o banco de dados MySQL
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin  # Imagem oficial do PHPMyAdmin
+    container_name: phpmyadmin  # Nome personalizado para o contêiner PHPMyAdmin
+    environment:
+      PMA_HOST: db  # Host do banco de dados, aponta para o nome do serviço `db`
+      MYSQL_ROOT_PASSWORD: root  # Senha para o usuário root do MySQL
+    ports:
+      - "8080:80"  # Mapeia a porta 80 do PHPMyAdmin para a porta 8080 do host
+    depends_on:
+      - db  # Define que o serviço `db` deve estar pronto antes de iniciar o PHPMyAdmin
+
+# Define volumes para persistência de dados
+volumes:
+  db_data:  # Volume nomeado `db_data` para armazenar os dados do banco de dados MySQL de forma persistente

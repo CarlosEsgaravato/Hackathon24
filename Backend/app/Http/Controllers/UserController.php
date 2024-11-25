@@ -32,7 +32,7 @@ class UserController extends Controller
         $request->validate([
             'usuario' => 'required|string|max:255',
             'senha' => 'required|string|min:8',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255',
             'funcao' => 'required|string|in:admin,usuario',
         ]);
 

@@ -35,8 +35,7 @@ const Reservas = () => {
       axios
         .get(`http://localhost:8000/api/ambientes/${ambienteId}`)
         .then((response) => {
-          setAmbiente(response.data);
-          console.log(ambiente.tipo)
+          setAmbiente(response.data.data);
         })
         .catch((error) => {
           console.error('Erro ao carregar ambiente:', error);
@@ -47,7 +46,7 @@ const Reservas = () => {
     axios
       .get(`http://localhost:8000/api/reservas`)
       .then((response) => {
-        setReservas(response.data);
+        setReservas(response.data.data);
       })
       .catch((error) => {
         console.error('Erro ao carregar reservas:', error);
@@ -66,21 +65,20 @@ const Reservas = () => {
           `http://localhost:8000/api/reservas?ambiente=${ambiente.nome}&data=${selectedDate}`
         )
         .then((response) => {
-          const reservas = response.data;
+          const reservas = response.data.data;
+          console.log(response)
 
-          // Atualizar os horários
           const horariosAtualizados = horariosGerados.map((h) => {
-            const reserva = reservas.find(
+            const reserva = reservas ? reservas.find(
               (r) => r.horario_inicio === h.horario.split(' - ')[0]
-            );
-
+            ) : null;
+          
             return {
               ...h,
               status: reserva ? 'reservado' : 'disponível',
-              idReserva: reserva?.id, // ID da reserva, se existir
-              usuarioReserva: reserva?.usuario_id, // ID do usuário que fez a reserva
             };
           });
+          
 
           setHorarios(horariosAtualizados);
         })
@@ -92,8 +90,8 @@ const Reservas = () => {
 
   const gerarHorarios = (inicio, fim) => {
     const horariosGerados = [];
-    let current = new Date(`2023-01-01T${inicio}:00`);
-    const end = new Date(`2023-01-01T${fim}:00`);
+    let current = new Date(`2023-01-01T${inicio}`);
+    const end = new Date(`2023-01-01T${fim}`);
     while (current < end) {
       const next = new Date(current.getTime() + 60 * 60 * 1000);
       horariosGerados.push({
@@ -106,19 +104,23 @@ const Reservas = () => {
     }
     return horariosGerados;
   };
+  
+  console.log(gerarHorarios);
+  
 
   const handleReservar = (horario) => {
     const [inicio, fim] = horario.split(' - ');
 
     // Encontrar o maior ID já existente nas reservas
-    const maiorIdReserva = Math.max(...reservas.map((r) => parseInt(r.id)), 0);
+    const maiorIdReserva = Math.max(...(reservas || []).map((r) => parseInt(r.id)), 0);
     const novoId = (maiorIdReserva + 1).toString(); // Incrementar o ID
 
+
     // Garantir que o usuarioLogado tem um ID
-    if (!usuarioLogado) {
-      alert('Você precisa estar logado para fazer uma reserva');
-      return;
-    }
+    // if (!usuarioLogado) {
+    //   alert('Você precisa estar logado para fazer uma reserva');
+    //   return;
+    // }
 
     console.log('Usuario Logado:', usuarioLogado); // Verificando o ID do usuário logado
 
@@ -126,8 +128,8 @@ const Reservas = () => {
     axios
       .post('http://localhost:8000/api/reservas', {
         id: novoId, // ID auto-incrementado
-        usuario_id: usuarioLogado.id, // Usar o ID do usuário logado
-        ambiente: ambiente.nome,
+        usuario_id: "1", // Usar o ID do usuário logado
+        ambiente_id: ambiente.id,
         horario_inicio: inicio,
         horario_fim: fim,
         statusReserva: 'reservado',
@@ -139,8 +141,7 @@ const Reservas = () => {
         setHorarios((prevHorarios) =>
           prevHorarios.map((h) =>
             h.horario === horario
-              ? { ...h, status: 'reservado', usuarioReserva: usuarioLogado.usuario }
-              : h
+             
           )
         );
 
@@ -149,8 +150,8 @@ const Reservas = () => {
           ...prevReservas,
           {
             id: novoId,
-            usuario_id: usuarioLogado.id, // Verifique se o usuário é o correto
-            ambiente: ambiente.nome,
+            usuario_id: "1", // Verifique se o usuário é o correto
+            ambiente_id: ambiente.id,
             horario_inicio: inicio,
             horario_fim: fim,
             statusReserva: 'reservado',

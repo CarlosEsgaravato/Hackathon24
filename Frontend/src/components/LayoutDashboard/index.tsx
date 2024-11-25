@@ -42,6 +42,7 @@ const LayoutDashboard = ({ children }: { children: React.ReactNode }) => {
           <li onClick={() => handleNavigate('/dashboard')}>Dashboard</li>
           <li onClick={() => handleNavigate('/cadastro-ambiente')}>Cadastro de Ambiente</li>
           <li onClick={() => handleNavigate('/cadastro-usuario')}>Cadastro de Usuário</li>
+          <li onClick={() => handleNavigate('/reserva')}>reserva</li>
         </ul>
       </div>
 

@@ -32,7 +32,7 @@ const HomePage = () => {
       axios
         .get("http://localhost:8000/api/ambientes", {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `cookie ${token}`
           }
         })
         .then((response) => {
