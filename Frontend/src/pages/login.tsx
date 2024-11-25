@@ -33,11 +33,15 @@ const Login = () => {
         router.push('/');
       })
       .catch((error) => {
-        console.error('There was an error!', error);
+        if (error.response?.status === 401) {
+          console.error('Credenciais inválidas:', error.response.data.message);
+          setIsToast(true); // Mostrar o erro ao usuário
+        } else {
+          console.error('Erro inesperado:', error.message);
+        }
         setIsLoading(false);
-        setIsToast(true);
-      });
-    
+        router.replace('/login');
+      });   
     } else {
       if (refForm.current) {
         refForm.current.classList.add('was-validated');

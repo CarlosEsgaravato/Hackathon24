@@ -18,8 +18,7 @@ const Reservas = () => {
   const [usuarios, setUsuarios] = useState([]); // Para armazenar os usuários
 
   useEffect(() => {
-    console.log('Ambiente ID:', ambienteId); // Log para depurar o ID
-  
+    // Simulando um ID de usuário logado, normalmente esse valor viria do contexto ou do login
     axios
       .get('http://localhost:8000/api/usuarios')
       .then((response) => {
@@ -30,21 +29,20 @@ const Reservas = () => {
       .catch((error) => {
         console.error('Erro ao carregar usuários:', error);
       });
-  
+
     if (ambienteId) {
+      // Busca os detalhes do ambiente
       axios
         .get(`http://localhost:8000/api/ambientes/${ambienteId}`)
         .then((response) => {
-          console.log('Resposta da API:', response.data); // Log para depurar a resposta
-          console.log('Horário de Início:', response.data.data.horario_inicio); // Log para depurar horário de início
-          console.log('Horário de Fim:', response.data.data.horario_fim); // Log para depurar horário de fim
           setAmbiente(response.data.data);
         })
         .catch((error) => {
           console.error('Erro ao carregar ambiente:', error);
         });
     }
-  
+
+    // Carregar todas as reservas existentes
     axios
       .get(`http://localhost:8000/api/reservas`)
       .then((response) => {
@@ -54,7 +52,6 @@ const Reservas = () => {
         console.error('Erro ao carregar reservas:', error);
       });
   }, [ambienteId]);
-  
 
   useEffect(() => {
     if (selectedDate && ambiente) {
@@ -69,20 +66,19 @@ const Reservas = () => {
         )
         .then((response) => {
           const reservas = response.data.data;
-          console.log('Reservas no horário selecionado:', reservas); // Log para depurar as reservas
+          console.log(response)
 
           const horariosAtualizados = horariosGerados.map((h) => {
-            const reserva = reservas.find(
+            const reserva = reservas ? reservas.find(
               (r) => r.horario_inicio === h.horario.split(' - ')[0]
-            );
-
+            ) : null;
+          
             return {
               ...h,
               status: reserva ? 'reservado' : 'disponível',
-              idReserva: reserva?.id,
-              usuarioReserva: reserva?.usuario_id,
             };
           });
+          
 
           setHorarios(horariosAtualizados);
         })
@@ -94,8 +90,8 @@ const Reservas = () => {
 
   const gerarHorarios = (inicio, fim) => {
     const horariosGerados = [];
-    let current = new Date(`2023-01-01T${inicio}:00`);
-    const end = new Date(`2023-01-01T${fim}:00`);
+    let current = new Date(`2023-01-01T${inicio}`);
+    const end = new Date(`2023-01-01T${fim}`);
     while (current < end) {
       const next = new Date(current.getTime() + 60 * 60 * 1000);
       horariosGerados.push({
@@ -108,23 +104,32 @@ const Reservas = () => {
     }
     return horariosGerados;
   };
+  
+  console.log(gerarHorarios);
+  
 
   const handleReservar = (horario) => {
     const [inicio, fim] = horario.split(' - ');
 
-    const maiorIdReserva = Math.max(...reservas.map((r) => parseInt(r.id)), 0);
-    const novoId = (maiorIdReserva + 1).toString();
+    // Encontrar o maior ID já existente nas reservas
+    const maiorIdReserva = Math.max(...(reservas || []).map((r) => parseInt(r.id)), 0);
+    const novoId = (maiorIdReserva + 1).toString(); // Incrementar o ID
 
-    if (!usuarioLogado) {
-      alert('Você precisa estar logado para fazer uma reserva');
-      return;
-    }
 
+    // Garantir que o usuarioLogado tem um ID
+    // if (!usuarioLogado) {
+    //   alert('Você precisa estar logado para fazer uma reserva');
+    //   return;
+    // }
+
+    console.log('Usuario Logado:', usuarioLogado); // Verificando o ID do usuário logado
+
+    // Criar nova reserva com o ID auto-incrementado
     axios
       .post('http://localhost:8000/api/reservas', {
-        id: novoId,
-        usuario_id: usuarioLogado.id,
-        ambiente: ambiente.nome,
+        id: novoId, // ID auto-incrementado
+        usuario_id: "1", // Usar o ID do usuário logado
+        ambiente_id: ambiente.id,
         horario_inicio: inicio,
         horario_fim: fim,
         statusReserva: 'reservado',
@@ -136,17 +141,17 @@ const Reservas = () => {
         setHorarios((prevHorarios) =>
           prevHorarios.map((h) =>
             h.horario === horario
-              ? { ...h, status: 'reservado', usuarioReserva: usuarioLogado.usuario }
-              : h
+             
           )
         );
 
+        // Atualizar a lista de reservas
         setReservas((prevReservas) => [
           ...prevReservas,
           {
             id: novoId,
-            usuario_id: usuarioLogado.id,
-            ambiente: ambiente.nome,
+            usuario_id: "1", // Verifique se o usuário é o correto
+            ambiente_id: ambiente.id,
             horario_inicio: inicio,
             horario_fim: fim,
             statusReserva: 'reservado',
