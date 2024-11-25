@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ReservaRequest;
 use App\Http\Resources\ReservaResource;
 use App\Models\Reserva;
-use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReservaController extends Controller
 {
@@ -31,7 +31,20 @@ class ReservaController extends Controller
      */
     public function store(ReservaRequest $request)
     {
-        $reserva =Reserva::create($request -> validated());
+        // Pega o usuário logado a partir do JWT
+        $usuarioId = auth()->user()->id;
+
+        // Cria a reserva associando o usuário logado
+        $reserva = Reserva::create([
+            'usuario_id' => $usuarioId,  // Associa o usuário logado
+            'ambiente_id' => $request->ambiente_id,
+            'horario_inicio' => $request->horario_inicio,
+            'horario_fim' => $request->horario_fim,
+            'statusReserva' => 'reservado',
+            'status' => 'ativo',
+            'data' => $request->data,
+        ]);
+
         return new ReservaResource($reserva);
     }
 
@@ -65,7 +78,27 @@ class ReservaController extends Controller
      */
     public function destroy(Reserva $reserva)
     {
-        $reserva -> delete();
-        return Response(null, 204);
+        $reserva->delete();
+        return response(null, 204);
+    }
+
+    /**
+     * Cancel a reservation.
+     */
+    public function cancelarReserva($id)
+    {
+        // Encontra a reserva pelo ID
+        $reserva = Reserva::findOrFail($id);
+
+        // Verifica se o usuário logado é o proprietário da reserva
+        if ($reserva->usuario_id !== auth()->user()->id) {
+            return response()->json(['message' => 'Você não pode cancelar esta reserva.'], 403);
+        }
+
+        // Altera o status para cancelado
+        $reserva->status = 'cancelado';
+        $reserva->save();
+
+        return response()->json(['message' => 'Reserva cancelada com sucesso.']);
     }
 }

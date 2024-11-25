@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
@@ -105,7 +103,7 @@ const Reservas = () => {
     const [inicio, fim] = horario.split(' - ');
 
     if (!selectedUserId) {
-      alert('Selecione um usuário para realizar a reserva.');
+      alert('Por favor, selecione um usuário antes de fazer a reserva.');
       return;
     }
 
@@ -177,18 +175,18 @@ const Reservas = () => {
               />
             </div>
 
+            {/* Seleção de usuário */}
             <div className={styles.formGroup}>
               <label htmlFor="usuario">Selecione o Usuário:</label>
               <select
                 id="usuario"
-                className={styles.input}
                 value={selectedUserId}
                 onChange={(e) => setSelectedUserId(e.target.value)}
               >
-                <option value="">Selecione</option>
+                <option value="">Selecione um usuário</option>
                 {usuarios.map((usuario) => (
                   <option key={usuario.id} value={usuario.id}>
-                    {usuario.nome}
+                    {usuario.usuario}
                   </option>
                 ))}
               </select>
@@ -223,9 +221,7 @@ const Reservas = () => {
                           Reservar
                         </button>
                       ) : (
-                        <span className={styles.reservadoText}>
-                          Reservado
-                        </span>
+                        <span>Reservado</span>
                       )}
                     </li>
                   ))}

@@ -33,3 +33,6 @@ Route::apiResource('/reservas', ReservaController::class)->except([
 Route::apiResource('/usuarios', UserController::class)->except([
     'create', 'edit'
 ]);
+
+Route::middleware('auth:api')->post('/reservas', [ReservaController::class, 'store']);
+Route::middleware('auth:api')->delete('/reservas/{id}', [ReservaController::class, 'cancelarReserva']);

@@ -14,7 +14,7 @@ const CadastroAmbiente = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     nome: "",
-    tipo: "Lab",
+    tipo: "Laboratório",
     status: "Disponivel",
     equipamentos: "",
     horario_inicio: "",
@@ -41,7 +41,7 @@ const CadastroAmbiente = () => {
     } else {
       setFormData({
         nome: "",
-        tipo: "Lab",
+        tipo: "Laboratório",
         status: "Disponivel",
         equipamentos: "",
         horario_inicio: "",

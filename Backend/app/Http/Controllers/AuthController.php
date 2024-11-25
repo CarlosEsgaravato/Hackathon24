@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -21,8 +22,10 @@ class AuthController extends Controller
             return response()->json(['message' => 'Credenciais inválidas'], 401);
         }
 
-        $token = $user->createToken('token-name')->plainTextToken;
+        // Gera o token JWT para o usuário autenticado
+        $token = JWTAuth::fromUser($user);
 
         return response()->json(['token' => $token]);
     }
 }
+
