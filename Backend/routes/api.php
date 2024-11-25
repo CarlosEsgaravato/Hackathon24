@@ -21,10 +21,10 @@ Route::apiResource('/ambientes', AmbienteController::class)->except([
  Route::post('login', [AuthController::class, 'login']);
 
 
-  Route::middleware('auth:sanctum')->group(function () 
-  { Route::apiResource('usuario', UserController::class)->except([
-    'create', 'edit'
-]);;});
+//   Route::middleware('auth:sanctum')->group(function () 
+//   { Route::apiResource('usuario', UserController::class)->except([
+//     'create', 'edit'
+// ]);;});
 
 Route::apiResource('/reservas', ReservaController::class)->except([
     'create', 'edit'
